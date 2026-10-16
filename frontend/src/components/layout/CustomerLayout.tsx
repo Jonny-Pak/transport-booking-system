@@ -7,7 +7,7 @@ export function CustomerLayout() {
         type="warning"
         showIcon
         title="Khu vực khách hàng — bản xem trước"
-        description="Xác thực và kiểm soát quyền sẽ được triển khai trước khi sử dụng dữ liệu thật."
+        description="Bạn đã đăng nhập. Chức năng đặt vé và dữ liệu vé thật chưa được triển khai."
       />
       <nav className="mt-6">
         <NavLink to="/my-bookings">Vé của tôi</NavLink>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.ErrorResponse;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,12 +21,23 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiResponse<Void>> api(ApiException exception) {
+        return ResponseEntity.status(exception.getStatus()).body(ApiResponse.error(exception.getMessage(), null));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<Void>> authentication(AuthenticationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error("Email hoặc mật khẩu không đúng, hoặc tài khoản không khả dụng.", null));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> validation(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new LinkedHashMap<>();
         exception.getBindingResult().getFieldErrors().forEach(error ->
                 errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(ApiResponse.error("Validation failed", errors));
+        return ResponseEntity.badRequest().body(ApiResponse.error("Thông tin nhập chưa hợp lệ. Vui lòng kiểm tra lại.", errors));
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class})

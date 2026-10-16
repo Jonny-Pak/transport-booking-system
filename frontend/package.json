@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "19.3.0",

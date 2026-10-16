@@ -2,13 +2,13 @@
 
 **Hệ thống bán vé tàu xe trực tuyến tích hợp thanh toán tự động**
 
-University Software Project Management capstone, built by one developer over 4–6 weeks. The initial MVP targets bus tickets; train booking is a future extension. This repository is the runnable application foundation for Sprint 1, not a completed booking product.
+University Software Project Management capstone, built by one developer over 4–6 weeks. The MVP targets both bus and train tickets, including carriages and segment-based seat allocation. The approved model has [17 business tables](docs/design/database-design.md). This repository is the runnable application foundation for Sprint 1, not a completed booking product.
 
 ## Current foundation and planned MVP
 
-Implemented: Spring Boot REST infrastructure, health endpoint, secure default access rules, PostgreSQL configuration, Flyway baseline, Vietnamese responsive React UI, all requested page routes, validated sample trip search, typed Axios integration and a development-only API status indicator.
+Implemented: Spring Boot REST infrastructure, health endpoint, PostgreSQL/Flyway V1–V2 (17 business tables), registration/login/logout with BCrypt and cookie sessions, CSRF protection, CUSTOMER/ADMIN authorization, Vietnamese React forms and route guards, sample trip search, typed Axios integration and a development-only API status indicator. See [authentication guide](docs/design/authentication.md).
 
-Planned: customer registration/login, trip search against real schedules, seat selection/holds, bookings, provider sandbox payment, electronic tickets, booking history, admin route/vehicle/trip/booking management and revenue reporting. No real authentication, booking, ticket issuance or payment is implemented. Customer/admin pages are explicitly labeled previews. All showcased routes and fares are sample data.
+Planned: trip search against real schedules, seat selection/holds, bookings, provider sandbox payment, electronic tickets, booking history, admin route/vehicle/trip/booking management and revenue reporting. Booking, ticket issuance and payment are not implemented. Customer/admin business pages remain previews behind real authentication and role guards. All showcased routes and fares are sample data.
 
 ## Technology stack
 
@@ -97,7 +97,7 @@ docker compose up -d postgres
 docker compose ps
 ```
 
-PostgreSQL binds to localhost only and uses a named persistent volume. `docker compose down` stops services while retaining data. On backend startup, Flyway creates its history table and executes V1 without any business tables. ERD review is required before V2. See [database notes](database/README.md).
+PostgreSQL binds to localhost only and uses a named persistent volume. `docker compose down` stops services while retaining data. On backend startup, Flyway executes the V1 baseline and V2 to create the approved 17 business tables. See [database notes](database/README.md) for constraints, timezone setup and application responsibilities, and [migration tests](docs/testing/database-migrations.md) for verification on real PostgreSQL.
 
 ## Start backend
 
@@ -114,7 +114,7 @@ cd backend
 ./mvnw.cmd spring-boot:run
 ```
 
-On macOS/Linux use `sh ./mvnw spring-boot:run` after exporting the same environment variables. The default profile disables Swagger; enable `local` only for local development. No generated login account or JWT is provided. Other API paths remain protected; CSRF and security headers remain enabled.
+On macOS/Linux use `sh ./mvnw spring-boot:run` after exporting the same environment variables. The default profile disables Swagger; enable `local` only for local development. No default login account or JWT is provided. Register through the UI; follow the authentication guide to promote an account to ADMIN locally. CSRF and security headers remain enabled. Set SESSION_COOKIE_SECURE=true when deploying over HTTPS.
 
 If your Windows system drive is full, use another drive for caches **and temporary downloads** before launching the wrapper:
 
@@ -172,7 +172,7 @@ cd backend
 ./mvnw.cmd package
 ```
 
-The MVC tests require no database and exercise actual security filters. They do not validate PostgreSQL/Flyway integration. See [validation results and manual checks](docs/testing/validation.md) for what actually ran and remaining environment blockers.
+The MVC tests require no database and exercise actual security filters. Opt-in DatabaseMigrationTest and AuthIntegrationTest exercise PostgreSQL/Flyway and real authentication; see [authentication guide](docs/design/authentication.md) for test environment variables and Playwright commands. See [validation results and manual checks](docs/testing/validation.md) for what actually ran and remaining environment blockers.
 
 ## Roadmap
 
@@ -182,4 +182,4 @@ The MVC tests require no database and exercise actual security filters. They do 
 4. Implement real trip search, transactional seat holds and bookings.
 5. Integrate provider sandbox payment with verified, idempotent callbacks; issue tickets after confirmation.
 6. Add booking history, revenue reporting, agreed cancellation policies, integration tests and capstone deployment evidence.
-7. Extend to train coaches/segments after the bus MVP is stable.
+7. Extend to connecting trips and advanced operational features after the bus and train MVP is stable.

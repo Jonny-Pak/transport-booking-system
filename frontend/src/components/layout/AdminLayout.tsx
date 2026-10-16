@@ -14,7 +14,7 @@ export function AdminLayout() {
             type="warning"
             showIcon
             title="Giao diện quản trị minh họa"
-            description="Chưa có quyền quản trị hoặc dữ liệu thật. API nghiệp vụ vẫn yêu cầu xác thực."
+            description="Bạn đã đăng nhập với quyền quản trị. Các chức năng quản lý nghiệp vụ đang được phát triển."
           />
           <Outlet />
         </main>

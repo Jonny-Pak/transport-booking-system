@@ -4,9 +4,15 @@ import { CustomerLayout } from '../../components/layout/CustomerLayout'
 import { AdminLayout } from '../../components/layout/AdminLayout'
 import { HomePage } from '../../pages/public/HomePage'
 import { NotFoundPage } from '../../pages/public/NotFoundPage'
+import { RequireAuth } from '../../features/auth/RequireAuth'
 export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
+    hydrateFallbackElement: (
+      <div role="status" className="p-8">
+        Đang tải trang…
+      </div>
+    ),
     children: [
       { index: true, element: <HomePage /> },
       {
@@ -37,7 +43,11 @@ export const router = createBrowserRouter([
         }),
       },
       {
-        element: <CustomerLayout />,
+        element: (
+          <RequireAuth role="CUSTOMER">
+            <CustomerLayout />
+          </RequireAuth>
+        ),
         children: [
           {
             path: 'my-bookings',
@@ -61,7 +71,16 @@ export const router = createBrowserRouter([
   },
   {
     path: 'admin',
-    element: <AdminLayout />,
+    hydrateFallbackElement: (
+      <div role="status" className="p-8">
+        Đang tải trang…
+      </div>
+    ),
+    element: (
+      <RequireAuth role="ADMIN">
+        <AdminLayout />
+      </RequireAuth>
+    ),
     children: [
       {
         index: true,

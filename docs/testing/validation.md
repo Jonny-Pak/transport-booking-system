@@ -1,5 +1,7 @@
 # Initialization validation
 
+Latest authentication delivery: see [authentication validation](authentication-validation.md) for 14 backend tests, 6 desktop/mobile browser tests and current build results. The initialization results below are historical.
+
 Executed on 12 October 2026 in the Windows checkout `D:\Code\transport-booking-system`, using Java 21.0.12, Node 24.19.0 and npm 11.17.0.
 
 | Check | Actual result |
